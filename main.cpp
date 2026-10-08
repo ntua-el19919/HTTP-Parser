@@ -24,7 +24,7 @@ std::string trim(const std::string& s){
 
 int main(){
     HttpRequest request;
-    std::ifstream file("http.txt");
+    std::ifstream file("http2.txt");
     std::string s1;
     std::string s2;
 
@@ -40,11 +40,18 @@ int main(){
     
     //parse the headers
     while(std::getline(file, s2)){
-        size_t pos = s2.find(':'); //οταν συνανταει την κενη γραμμη γίνεται 18446744073709551615
-        if (pos == std::string::npos){
+        if (trim(s2).empty()){
             break;
         }
-        request.headers.emplace_back(s2.substr(0,pos), trim(s2.substr(pos + 1)));
+        else {
+            size_t pos = s2.find(':'); 
+            if (pos == std::string::npos){
+                std::cout << "Invalid Header!" << std::endl;
+            }
+            else{
+                request.headers.emplace_back(s2.substr(0,pos), trim(s2.substr(pos + 1)));
+            }
+        }
     }
     file.close();
     for (auto& pair : request.headers){
